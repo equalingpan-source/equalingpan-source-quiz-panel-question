@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>モニター | Quiz Panel Questionboard</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="monitor-body">
+  <main class="monitor-page">
+    <section class="monitor-shell">
+      <div class="monitor-stage">
+        <div class="monitor-question-panel" id="monitorQuestionPanel">
+          <div class="monitor-question-top">
+            <div class="monitor-question-order" id="monitorQuestionOrder">問題未セット</div>
+            <div class="monitor-question-answer hidden" id="monitorQuestionAnswer"></div>
+          </div>
+          <div class="monitor-question-text" id="monitorQuestionText">親機で問題をセットしてください。</div>
+        </div>
+        <div class="monitor-grid" id="monitorBoard"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/monitor.js"></script>
+</body>
+</html>

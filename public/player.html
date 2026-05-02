@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>子機 | Quiz Panel Questionboard</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="player-body">
+  <main class="page player-page">
+    <section class="player-shell">
+      <header class="player-header">
+        <div class="player-header-copy">
+          <p class="player-kicker">Quiz Panel</p>
+          <div class="player-name-large" id="playerNameDisplay">---</div>
+        </div>
+      </header>
+
+      <section class="player-question-panel" id="playerQuestionPanel">
+        <div class="player-question-top">
+          <div class="player-question-order" id="playerQuestionOrder">問題準備中</div>
+        </div>
+        <div class="player-question-text" id="playerQuestionText">問題が届くまでお待ちください。</div>
+      </section>
+
+      <section class="player-compose" id="playerCompose">
+        <div class="player-meta-row">
+          <div class="player-result-label">正解</div>
+          <div class="char-counter" id="charCounter">待機中</div>
+        </div>
+
+        <div class="player-input-wrap">
+          <div class="player-wait-panel hidden" id="playerWaitPanel">
+            <div class="player-wait-title">待機中</div>
+            <div class="player-wait-text" id="playerWaitText">問題が届くまでお待ちください。</div>
+          </div>
+
+          <div class="player-input-panel" id="textInputPanel">
+            <textarea
+              id="answerInput"
+              class="answer-input"
+              placeholder="答えを入力"
+              maxlength="24"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            ></textarea>
+          </div>
+
+          <div class="player-input-panel hidden" id="handwritingInputPanel">
+            <div class="handwriting-stage">
+              <canvas id="handwritingCanvas" class="handwriting-canvas"></canvas>
+            </div>
+          </div>
+
+          <div class="player-lock-overlay"></div>
+        </div>
+
+        <div class="player-footer">
+          <button type="button" class="player-clear-button" id="clearAnswerBtn">クリア</button>
+          <button type="button" class="player-submit-button" id="submitAnswerBtn">送信</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/player.js"></script>
+</body>
+</html>
