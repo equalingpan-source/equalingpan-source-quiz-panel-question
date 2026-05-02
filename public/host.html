@@ -22,6 +22,10 @@
             <p class="host-kicker">Quiz Panel</p>
             <h1>親機</h1>
           </div>
+          <div class="host-toolbar-actions">
+            <label class="button host-file-button" for="csvFileInput">CSVを選択</label>
+            <a class="button host-file-button" href="/api/sample-question-set.csv" download>定型CSVをダウンロード</a>
+          </div>
           <p class="status-text host-inline-message" id="controlMessage"></p>
           <div class="host-room-pill">
             <span class="label">ROOM</span>
@@ -33,11 +37,7 @@
       <section class="host-main">
         <aside class="panel host-side-panel">
           <section class="host-question-shell">
-            <div class="host-question-import">
-              <label class="button host-file-button" for="csvFileInput">CSVを選択</label>
-              <a class="button host-file-button" href="/api/sample-question-set.csv" download>定型CSVをダウンロード</a>
-              <input id="csvFileInput" type="file" accept=".csv,text/csv" class="hidden" />
-            </div>
+            <input id="csvFileInput" type="file" accept=".csv,text/csv" class="hidden" />
 
             <div class="host-question-meta">
               <div class="host-question-file" id="csvFileName">未読込</div>

@@ -239,7 +239,7 @@ textarea {
 
 .host-toolbar-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
 }
@@ -252,6 +252,13 @@ textarea {
 .host-toolbar-copy h1 {
   font-size: clamp(1.2rem, 2.2vw, 1.7rem);
   line-height: 1.1;
+}
+
+.host-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .host-kicker {
@@ -310,19 +317,14 @@ textarea {
 
 .host-question-shell {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   min-height: 0;
 }
 
-.host-question-import {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
 .host-file-button {
-  min-height: 42px;
+  min-height: 38px;
   padding-inline: 12px;
+  font-size: 0.9rem;
 }
 
 .host-question-meta {
@@ -405,7 +407,7 @@ textarea {
 
 .host-question-list {
   min-height: 0;
-  max-height: 440px;
+  max-height: 260px;
   overflow: auto;
   display: grid;
   gap: 8px;
@@ -1486,12 +1488,12 @@ textarea {
     gap: 6px;
   }
 
-  .host-inline-message {
-    white-space: normal;
+  .host-toolbar-actions {
+    width: 100%;
   }
 
-  .host-question-import {
-    grid-template-columns: 1fr;
+  .host-inline-message {
+    white-space: normal;
   }
 
   .host-mode-switch {
