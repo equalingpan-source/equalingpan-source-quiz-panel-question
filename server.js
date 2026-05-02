@@ -201,7 +201,13 @@ function serializePlayerQuestion(question) {
   };
 }
 
+function shouldShareQuestionToAudience(room) {
+  return normalizeRoomPhase(room.phase) !== 'setup';
+}
+
 function serializeMonitorQuestion(room) {
+  if (!shouldShareQuestionToAudience(room)) return null;
+
   const question = room.currentQuestion;
   if (!question) return null;
 
@@ -236,7 +242,7 @@ function serializePlayerRoom(room, playerId) {
     code: room.code,
     phase,
     answerMode: room.answerMode,
-    currentQuestion: serializePlayerQuestion(room.currentQuestion),
+    currentQuestion: shouldShareQuestionToAudience(room) ? serializePlayerQuestion(room.currentQuestion) : null,
     inputEnabled: phaseAllowsInput(phase),
     revealMode: phaseToRevealMode(phase),
     me: player
@@ -454,6 +460,19 @@ app.get('/api/version', (_req, res) => {
   });
 });
 
+app.get('/api/sample-question-set.csv', (_req, res) => {
+  const csv = [
+    'question,answer',
+    '"日本の首都は？","東京"',
+    '"富士山の高さは約何メートル？","3776"',
+    '"日本でいちばん面積が大きい都道府県は？","北海道"',
+  ].join('\r\n');
+
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', 'attachment; filename="sample-question-set.csv"');
+  res.send(`\uFEFF${csv}`);
+});
+
 app.get('/api/qr', async (req, res) => {
   const text = String(req.query.text || '').trim();
 
@@ -518,6 +537,10 @@ io.on('connection', (socket) => {
     if (!room.answerMode) {
       ack({ ok: false, message: '回答方式の指定が不正です。' });
       return;
+    }
+
+    if (room.currentQuestion) {
+      room.currentQuestion.answerMode = room.answerMode;
     }
 
     for (const player of room.players.values()) {

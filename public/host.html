@@ -10,42 +10,40 @@
   <main class="page host-page">
     <section class="panel setup-panel" id="createSection">
       <h1>Quiz Panel 親機</h1>
-      <p class="description">ルームを作成して、問題の読込と進行をここで行います。</p>
+      <p class="description">ルーム作成後に問題を読み込み、ここから進行します。</p>
       <button class="button button-primary" id="createRoomBtn" type="button">ルームを作成</button>
       <p class="status-text" id="createMessage"></p>
     </section>
 
     <section class="host-shell hidden" id="controlSection">
       <section class="panel host-toolbar">
-        <div class="host-toolbar-top">
-          <p class="host-kicker">Quiz Panel</p>
-          <div class="host-title-row">
-            <div class="host-title-meta">
-              <h1>親機</h1>
-              <p class="status-text host-inline-message" id="controlMessage"></p>
-            </div>
-            <div class="host-room-pill">
-              <span class="label">ROOM</span>
-              <strong class="room-code" id="roomCode">------</strong>
-            </div>
+        <div class="host-toolbar-row">
+          <div class="host-toolbar-copy">
+            <p class="host-kicker">Quiz Panel</p>
+            <h1>親機</h1>
+          </div>
+          <p class="status-text host-inline-message" id="controlMessage"></p>
+          <div class="host-room-pill">
+            <span class="label">ROOM</span>
+            <strong class="room-code" id="roomCode">------</strong>
           </div>
         </div>
       </section>
 
-      <section class="panel host-main">
-        <section class="host-question-shell">
-          <div class="host-question-import">
-            <label class="button host-file-button" for="csvFileInput">CSVを選択</label>
-            <a class="button host-file-button" href="/sample-question-set.csv" download>サンプルCSV</a>
-            <input id="csvFileInput" type="file" accept=".csv,text/csv" class="hidden" />
+      <section class="host-main">
+        <aside class="panel host-side-panel">
+          <section class="host-question-shell">
+            <div class="host-question-import">
+              <label class="button host-file-button" for="csvFileInput">CSVを選択</label>
+              <a class="button host-file-button" href="/api/sample-question-set.csv" download>定型CSVをダウンロード</a>
+              <input id="csvFileInput" type="file" accept=".csv,text/csv" class="hidden" />
+            </div>
+
             <div class="host-question-meta">
               <div class="host-question-file" id="csvFileName">未読込</div>
               <div class="host-question-count" id="questionCountLabel">0問</div>
+              <div class="host-current-question" id="currentQuestionBanner">未セット</div>
             </div>
-          </div>
-
-          <div class="host-question-layout">
-            <div class="host-question-list" id="questionList"></div>
 
             <div class="host-question-preview">
               <div class="host-question-preview-top">
@@ -53,89 +51,86 @@
                 <div class="host-question-preview-mode" id="selectedQuestionMode">通常入力</div>
               </div>
               <div class="host-question-preview-text" id="selectedQuestionText">問題を選ぶとここに表示されます。</div>
-              <div class="host-question-preview-answer" id="selectedQuestionAnswer"></div>
-              <div class="host-question-preview-note" id="selectedQuestionNote"></div>
-              <div class="button-row">
-                <button class="button button-primary" id="applyQuestionBtn" type="button">この問題をセット</button>
+              <div class="host-question-preview-answer hidden" id="selectedQuestionAnswer"></div>
+              <div class="host-question-preview-note hidden" id="selectedQuestionNote"></div>
+              <button class="button button-primary host-apply-button" id="applyQuestionBtn" type="button">この問題をセット</button>
+            </div>
+
+            <div class="host-question-list" id="questionList"></div>
+          </section>
+
+          <details class="host-share">
+            <summary class="host-share-summary">
+              <span class="host-share-summary-title">参加とモニター</span>
+              <span class="host-share-summary-meta">
+                <span class="host-share-summary-hint">共有</span>
+                <span class="host-share-summary-icon" aria-hidden="true"></span>
+              </span>
+            </summary>
+            <div class="host-share-grid">
+              <section class="host-share-block">
+                <h2>参加用 QR</h2>
+                <div class="qr-panel">
+                  <div class="qr-box">
+                    <img id="playerQrImage" alt="参加用QRコード" />
+                  </div>
+                </div>
+
+                <label class="field">
+                  <span class="label">参加 URL</span>
+                  <select id="playerUrlSelect"></select>
+                </label>
+
+                <div class="button-row compact">
+                  <button class="button" id="copyPlayerUrlBtn" type="button">参加URLをコピー</button>
+                  <button class="button" id="reloadNetworkBtn" type="button">URL更新</button>
+                </div>
+              </section>
+
+              <section class="host-share-block">
+                <h2>モニター</h2>
+                <label class="field">
+                  <span class="label">モニター URL</span>
+                  <input id="monitorUrlInput" type="text" readonly />
+                </label>
+
+                <div class="button-row compact">
+                  <button class="button" id="copyMonitorUrlBtn" type="button">URLをコピー</button>
+                  <button class="button" id="openMonitorBtn" type="button">別画面で開く</button>
+                </div>
+              </section>
+            </div>
+          </details>
+        </aside>
+
+        <section class="panel host-board-shell">
+          <div class="host-control-strip">
+            <div class="host-control-summary">
+              <div class="host-board-onair" id="hostOnAirLabel">準備中</div>
+              <div class="host-current-mode-pill" id="hostCurrentModePill">回答方法: 通常入力</div>
+            </div>
+
+            <div class="host-control-cluster">
+              <div class="host-mode-panel">
+                <span class="label">回答方法</span>
+                <div class="host-mode-switch" id="hostModeSwitch">
+                  <button class="button host-mode-button" id="modeTextBtn" type="button">通常入力</button>
+                  <button class="button host-mode-button" id="modeHandwritingBtn" type="button">手書き</button>
+                </div>
+              </div>
+
+              <div class="button-row host-action-row">
+                <button class="button button-success host-primary-action" id="toggleInputBtn" type="button">回答開始</button>
+                <button class="button host-monitor-action" id="toggleDisplayBtn" type="button">回答表示</button>
+                <button class="button host-monitor-action" id="clearAllBtn" type="button">正解表示</button>
+                <button class="button host-monitor-action" id="monitorWaitBtn" type="button">待機表示</button>
               </div>
             </div>
           </div>
-        </section>
 
-        <div class="section-head host-answer-head">
-          <div class="host-head-copy">
-            <h2>回答一覧</h2>
-            <p class="description">問題をセットしてから回答を受け付けます。</p>
-          </div>
-
-          <div class="host-mode-panel">
-            <span class="label">回答方法</span>
-            <div class="host-mode-switch" id="hostModeSwitch">
-              <button class="button host-mode-button" id="modeTextBtn" type="button">通常入力</button>
-              <button class="button host-mode-button" id="modeHandwritingBtn" type="button">手書き</button>
-            </div>
-          </div>
-
-          <div class="button-row host-action-row">
-            <button class="button button-success host-primary-action" id="toggleInputBtn" type="button">回答開始</button>
-            <button class="button host-monitor-action" id="toggleDisplayBtn" type="button">モニターへ回答表示</button>
-            <button class="button host-monitor-action" id="clearAllBtn" type="button">モニターへ正解表示</button>
-            <button class="button host-monitor-action" id="monitorWaitBtn" type="button">モニターを待機に戻す</button>
-          </div>
-        </div>
-
-        <div class="host-board-stage" id="hostBoardStage">
-          <div class="host-board-topline">
-            <div class="host-board-onair" id="hostOnAirLabel">準備中</div>
-            <div class="host-current-mode-pill" id="hostCurrentModePill">回答方法: 通常入力</div>
-          </div>
-          <div class="host-current-question" id="currentQuestionBanner">問題未セット</div>
           <div class="host-answer-grid" id="playerCards"></div>
-        </div>
+        </section>
       </section>
-
-      <details class="panel host-share" open>
-        <summary class="host-share-summary">
-          <span class="host-share-summary-title">参加とモニター</span>
-          <span class="host-share-summary-meta">
-            <span class="host-share-summary-hint">共有</span>
-            <span class="host-share-summary-icon" aria-hidden="true"></span>
-          </span>
-        </summary>
-        <div class="host-share-grid">
-          <section class="host-share-block">
-            <h2>参加用 QR</h2>
-            <div class="qr-panel">
-              <div class="qr-box">
-                <img id="playerQrImage" alt="参加用QRコード" />
-              </div>
-            </div>
-
-            <label class="field">
-              <span class="label">参加 URL</span>
-              <select id="playerUrlSelect"></select>
-            </label>
-
-            <div class="button-row compact">
-              <button class="button" id="copyPlayerUrlBtn" type="button">参加URLをコピー</button>
-              <button class="button" id="reloadNetworkBtn" type="button">URL更新</button>
-            </div>
-          </section>
-
-          <section class="host-share-block">
-            <h2>モニター</h2>
-            <label class="field">
-              <span class="label">モニター URL</span>
-              <input id="monitorUrlInput" type="text" readonly />
-            </label>
-
-            <div class="button-row compact">
-              <button class="button" id="copyMonitorUrlBtn" type="button">URLをコピー</button>
-              <button class="button" id="openMonitorBtn" type="button">別画面で開く</button>
-            </div>
-          </section>
-        </div>
-      </details>
     </section>
   </main>
 

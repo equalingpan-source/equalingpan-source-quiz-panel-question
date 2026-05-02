@@ -536,7 +536,7 @@ function renderAnswerMode(room) {
 
 function renderCurrentQuestionBanner(room) {
   const question = room.currentQuestion;
-  currentQuestionBanner.textContent = question ? `Q${question.order} ${question.questionText}` : '問題未セット';
+  currentQuestionBanner.textContent = question ? `セット中 Q${question.order}` : '未セット';
 }
 
 function configureActionButton(button, config) {
