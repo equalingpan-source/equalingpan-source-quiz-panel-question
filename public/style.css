@@ -542,14 +542,14 @@ textarea {
 
 .host-control-strip {
   display: grid;
-  gap: 14px;
-  padding: 14px;
+  gap: 10px;
+  padding: 12px 14px;
   border: 1px solid #dce6f6;
   border-radius: 20px;
   background: linear-gradient(180deg, #f9fbff 0%, #f3f8ff 100%);
 }
 
-.host-control-summary {
+.host-control-topline {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -561,66 +561,61 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
-  padding: 7px 14px;
+  min-height: 32px;
+  padding: 6px 12px;
   border-radius: 999px;
   background: #dbe4f1;
   color: #4e5e78;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
 }
 
-.host-current-mode-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: #e1ebff;
-  color: #1d4ed8;
-  font-size: 0.82rem;
-  font-weight: 800;
-}
-
 .host-control-cluster {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 14px;
-  align-items: end;
-}
-
-.host-mode-panel {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .host-mode-switch {
   display: flex;
   gap: 8px;
+  flex: 0 0 auto;
 }
 
 .host-mode-button {
-  min-width: 118px;
-  min-height: 42px;
+  min-width: 104px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
 }
 
 .host-action-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   align-items: center;
   justify-content: flex-end;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .host-action-row .host-primary-action {
-  flex: 1 1 220px;
-  min-height: 42px;
+  flex: 1 1 180px;
+  min-height: 38px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
 }
 
 .host-action-row .host-monitor-action {
-  flex: 0 1 128px;
-  min-height: 42px;
+  flex: 0 1 110px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
 }
 
 .host-shell.mode-answers .host-board-shell {
@@ -652,9 +647,9 @@ textarea {
 
 .host-answer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 320px));
-  gap: 16px;
-  justify-content: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  justify-content: stretch;
 }
 
 .host-answer-card {
@@ -664,7 +659,6 @@ textarea {
   aspect-ratio: 16 / 10;
   min-height: 0;
   width: 100%;
-  max-width: 320px;
   padding: 0;
   border: 3px solid var(--blue-line);
   border-radius: 18px;
@@ -1455,11 +1449,16 @@ textarea {
   }
 
   .host-control-cluster {
-    grid-template-columns: 1fr;
+    justify-content: stretch;
   }
 
   .host-action-row {
-    justify-content: stretch;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .host-answer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1514,6 +1513,10 @@ textarea {
 
   .host-control-strip {
     padding: 12px;
+  }
+
+  .host-answer-grid {
+    grid-template-columns: 1fr;
   }
 
   .monitor-page {

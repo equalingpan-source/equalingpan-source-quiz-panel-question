@@ -18,7 +18,6 @@ const clearAllBtn = document.getElementById('clearAllBtn');
 const monitorWaitBtn = document.getElementById('monitorWaitBtn');
 const modeTextBtn = document.getElementById('modeTextBtn');
 const modeHandwritingBtn = document.getElementById('modeHandwritingBtn');
-const hostCurrentModePill = document.getElementById('hostCurrentModePill');
 const csvFileInput = document.getElementById('csvFileInput');
 const csvFileName = document.getElementById('csvFileName');
 const questionCountLabel = document.getElementById('questionCountLabel');
@@ -531,7 +530,6 @@ function renderAnswerMode(room) {
   modeHandwritingBtn.className = `button host-mode-button${isHandwriting ? ' button-primary' : ''}`;
   modeTextBtn.disabled = phase === 'open';
   modeHandwritingBtn.disabled = phase === 'open';
-  hostCurrentModePill.textContent = `回答方法: ${getQuestionModeLabel(room.answerMode)}`;
 }
 
 function renderCurrentQuestionBanner(room) {
