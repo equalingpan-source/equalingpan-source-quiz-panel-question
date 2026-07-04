@@ -32,6 +32,16 @@ function shouldUseCompactMonitorLayout() {
   return window.innerWidth <= 960 || window.innerHeight <= 720;
 }
 
+function shouldUseUltraCompactMonitorLayout() {
+  return window.innerWidth <= 520 || window.innerHeight <= 560;
+}
+
+function getMonitorScale() {
+  const widthScale = window.innerWidth <= 520 ? Math.max(0.72, window.innerWidth / 520) : 1;
+  const heightScale = window.innerHeight <= 560 ? Math.max(0.78, window.innerHeight / 560) : 1;
+  return Math.min(1, widthScale, heightScale);
+}
+
 function getMonitorGridColumns(playerCount) {
   if (playerCount <= 1) return 1;
 
@@ -131,9 +141,13 @@ function applyRoom(room) {
   renderQuestion(room);
 
   if (monitorShell) {
+    const monitorScale = getMonitorScale();
     monitorShell.classList.toggle('mode-answers', phase === 'revealAnswers');
     monitorShell.classList.toggle('mode-correct', phase === 'revealResults');
     monitorShell.classList.toggle('is-compact', shouldUseCompactMonitorLayout());
+    monitorShell.classList.toggle('is-ultra-compact', shouldUseUltraCompactMonitorLayout());
+    monitorShell.style.setProperty('--monitor-scale', String(monitorScale));
+    monitorShell.classList.toggle('is-scaled', monitorScale < 0.999);
   }
 
   const showAnswers = phase === 'revealAnswers' || phase === 'revealResults';

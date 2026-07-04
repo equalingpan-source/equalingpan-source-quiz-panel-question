@@ -945,6 +945,13 @@ textarea {
   background: radial-gradient(circle at top, rgba(59, 130, 246, 0.12), transparent 48%), #0f172a;
 }
 
+.monitor-shell.is-scaled {
+  width: calc(100% / var(--monitor-scale, 1));
+  height: calc(100% / var(--monitor-scale, 1));
+  transform: scale(var(--monitor-scale, 1));
+  transform-origin: center center;
+}
+
 .monitor-shell.mode-answers {
   background: radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 52%), #0f172a;
 }
@@ -1184,6 +1191,65 @@ textarea {
   flex-basis: 38px;
   padding: 6px 10px;
   font-size: 0.82rem;
+}
+
+.monitor-shell.is-ultra-compact {
+  border-radius: 14px;
+}
+
+.monitor-shell.is-ultra-compact .monitor-stage {
+  gap: 8px;
+  padding: 8px;
+}
+
+.monitor-shell.is-ultra-compact .monitor-question-panel {
+  gap: 5px;
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+
+.monitor-shell.is-ultra-compact .monitor-question-top {
+  gap: 8px;
+}
+
+.monitor-shell.is-ultra-compact .monitor-question-order {
+  font-size: 0.74rem;
+}
+
+.monitor-shell.is-ultra-compact .monitor-question-answer {
+  min-height: 22px;
+  padding: 2px 7px;
+  font-size: 0.62rem;
+}
+
+.monitor-shell.is-ultra-compact .monitor-question-text {
+  font-size: clamp(0.76rem, 1.7vw, 0.96rem);
+  line-height: 1.2;
+}
+
+.monitor-shell.is-ultra-compact .monitor-grid {
+  gap: 6px;
+}
+
+.monitor-shell.is-ultra-compact .board-tile {
+  border-radius: 10px;
+  grid-template-rows: minmax(0, 1fr) 30px;
+  border-width: 1px;
+}
+
+.monitor-shell.is-ultra-compact .board-tile-body {
+  padding: 8px 8px 10px;
+}
+
+.monitor-shell.is-ultra-compact .board-tile-placeholder-name {
+  font-size: clamp(0.94rem, 3.2vw, 1.34rem);
+}
+
+.monitor-shell.is-ultra-compact .board-tile-name {
+  height: 30px;
+  flex-basis: 30px;
+  padding: 3px 6px;
+  font-size: 0.66rem;
 }
 
 .board-tile.is-hidden-state .board-tile-name {
