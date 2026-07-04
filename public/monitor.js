@@ -120,7 +120,7 @@ function applyRoom(room) {
   }
 
   monitorBoard.classList.toggle('is-single-layout', isSingleLayout);
-  monitorBoard.style.gridTemplateColumns = isSingleLayout ? 'minmax(320px, 1120px)' : `repeat(${cols}, 1fr)`;
+  monitorBoard.style.gridTemplateColumns = isSingleLayout ? 'minmax(0, 1fr)' : `repeat(${cols}, minmax(0, 1fr))`;
   monitorBoard.style.gridTemplateRows = isSingleLayout ? 'auto' : `repeat(${rows}, 1fr)`;
 
   const currentIds = new Set(room.board.map((player) => `player-${player.id}`));
