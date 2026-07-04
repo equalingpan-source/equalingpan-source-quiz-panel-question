@@ -275,6 +275,12 @@ function getSelectedQuestion() {
   return questionBank.find((question) => question.id === selectedQuestionId) || null;
 }
 
+function getSortedQuestionBank() {
+  return questionBank
+    .slice()
+    .sort((left, right) => left.order - right.order);
+}
+
 function getPreviewQuestion() {
   return getSelectedQuestion() || currentRoom?.currentQuestion || null;
 }
@@ -332,9 +338,7 @@ function renderQuestionBank() {
     return;
   }
 
-  questionBank
-    .slice()
-    .sort((left, right) => left.order - right.order)
+  getSortedQuestionBank()
     .forEach((question) => {
       const button = document.createElement('button');
       button.type = 'button';
@@ -615,6 +619,42 @@ function syncSelectionWithCurrentQuestion(room) {
   }
 }
 
+function getNextQuestionForNextRound() {
+  if (!questionBank.length) {
+    return null;
+  }
+
+  const orderedQuestions = getSortedQuestionBank();
+  const currentQuestion = currentRoom?.currentQuestion;
+  const currentIndex = orderedQuestions.findIndex(
+    (question) => question.id === selectedQuestionId
+      || (
+        currentQuestion
+        && question.order === currentQuestion.order
+        && question.questionText === currentQuestion.questionText
+      )
+  );
+
+  if (currentIndex < 0) {
+    return getSelectedQuestion() || orderedQuestions[0] || null;
+  }
+
+  return orderedQuestions[currentIndex + 1] || orderedQuestions[currentIndex] || null;
+}
+
+function applyQuestionByValue(question, successMessage) {
+  if (!currentRoom || !question) return;
+
+  socket.emit('host:setQuestion', { roomCode: currentRoom.code, question }, (response) => {
+    if (!response.ok) {
+      setMessage(controlMessage, response.message, 'warn');
+      return;
+    }
+
+    setMessage(controlMessage, successMessage, 'ok');
+  });
+}
+
 function renderRoom(room) {
   currentRoom = room;
   saveHostRoomCode(room.code);
@@ -713,7 +753,7 @@ function changeRoomPhase(targetPhase, successMessage) {
   });
 }
 
-function goToNextRound() {
+function resetCurrentRound() {
   if (!currentRoom) return;
 
   const confirmed = window.confirm('現在の回答をリセットしていいですか？');
@@ -774,6 +814,30 @@ async function loadQuestionCsv(file) {
   }
 }
 
+function goToNextRoundWithSelection() {
+  if (!currentRoom) return;
+
+  const nextQuestion = getNextQuestionForNextRound();
+  const confirmed = window.confirm('現在の回答をリセットして、次の問題へ進みますか？');
+  if (!confirmed) return;
+
+  socket.emit('host:clearAll', { roomCode: currentRoom.code, nextPhase: 'setup' }, (response) => {
+    if (!response.ok) {
+      setMessage(controlMessage, response.message, 'warn');
+      return;
+    }
+
+    if (nextQuestion) {
+      selectedQuestionId = nextQuestion.id;
+      renderQuestionBank();
+      applyQuestionByValue(nextQuestion, `Q${nextQuestion.order} を次の問題としてセットしました。`);
+      return;
+    }
+
+    setMessage(controlMessage, '回答をリセットしました。', 'ok');
+  });
+}
+
 createRoomBtn.addEventListener('click', () => {
   socket.emit('host:create', {}, (response) => {
     if (!response.ok) {
@@ -789,7 +853,7 @@ createRoomBtn.addEventListener('click', () => {
 
 toggleInputBtn.addEventListener('click', () => {
   if (toggleInputBtn.dataset.targetPhase === 'nextRound') {
-    goToNextRound();
+    goToNextRoundWithSelection();
     return;
   }
 

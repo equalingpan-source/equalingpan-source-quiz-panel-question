@@ -159,6 +159,12 @@ function snapshotCommittedAnswer(player) {
   };
 }
 
+function syncRevealedAnswer(room, player) {
+  if (!room || !player) return;
+  if (!isRevealPhase(normalizeRoomPhase(room.phase))) return;
+  room.revealedAnswers.set(player.id, snapshotCommittedAnswer(player));
+}
+
 function serializeBoard(room) {
   return getSortedPlayers(room).map((player) => ({
     id: player.id,
@@ -857,6 +863,7 @@ io.on('connection', (socket) => {
 
     player.locked = true;
     player.lastEditedAt = Date.now();
+    syncRevealedAnswer(room, player);
 
     ack({ ok: true, room: serializePlayerRoom(room, player.id) });
     emitRoomState(room);
@@ -885,6 +892,7 @@ io.on('connection', (socket) => {
     player.drawingDataUrl = player.answerMode === 'handwriting' ? normalizeDrawingDataUrl(drawingDataUrl) : '';
     player.locked = true;
     player.lastEditedAt = Date.now();
+    syncRevealedAnswer(room, player);
 
     ack({ ok: true, room: serializePlayerRoom(room, player.id) });
     emitRoomState(room);
