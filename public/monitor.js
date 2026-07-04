@@ -13,6 +13,7 @@ const monitorQuestionAnswer = document.getElementById('monitorQuestionAnswer');
 const monitorBoard = document.getElementById('monitorBoard');
 const monitorShell = document.querySelector('.monitor-shell');
 let refitFrame = 0;
+let currentRoom = null;
 
 function escapeHtml(value) {
   return String(value || '')
@@ -27,6 +28,31 @@ function getRoomPhase(room) {
   return room?.phase || 'setup';
 }
 
+function shouldUseCompactMonitorLayout() {
+  return window.innerWidth <= 960 || window.innerHeight <= 720;
+}
+
+function getMonitorGridColumns(playerCount) {
+  if (playerCount <= 1) return 1;
+
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const isPortraitLike = viewportWidth < viewportHeight * 0.95;
+
+  if (playerCount <= 2) {
+    return viewportWidth <= 520 ? 1 : playerCount;
+  }
+
+  if (playerCount <= 4) {
+    if (viewportWidth <= 440) return 1;
+    return 2;
+  }
+
+  if (viewportWidth <= 520) return 1;
+  if (viewportWidth <= 980 || isPortraitLike) return 2;
+  return 3;
+}
+
 function fitAnswerText(element, container) {
   if (!element || !container) return;
 
@@ -36,7 +62,7 @@ function fitAnswerText(element, container) {
 
   const safeWidth = Math.max(0, width - 24);
   const safeHeight = Math.max(0, height - 28);
-  const minPx = 24;
+  const minPx = shouldUseCompactMonitorLayout() ? 18 : 24;
   let low = minPx;
   let high = Math.max(minPx, Math.min(safeWidth * 0.92, safeHeight * 1.18));
   let best = minPx;
@@ -100,24 +126,22 @@ function renderQuestion(room) {
 }
 
 function applyRoom(room) {
+  currentRoom = room;
   const phase = getRoomPhase(room);
   renderQuestion(room);
 
   if (monitorShell) {
     monitorShell.classList.toggle('mode-answers', phase === 'revealAnswers');
     monitorShell.classList.toggle('mode-correct', phase === 'revealResults');
+    monitorShell.classList.toggle('is-compact', shouldUseCompactMonitorLayout());
   }
 
   const showAnswers = phase === 'revealAnswers' || phase === 'revealResults';
   const playerCount = room.board.length;
   const isSingleLayout = playerCount === 1;
 
-  let cols = 1;
-  let rows = 1;
-  if (playerCount > 1) {
-    cols = Math.ceil(Math.sqrt(playerCount * 1.6));
-    rows = Math.ceil(playerCount / cols);
-  }
+  const cols = getMonitorGridColumns(playerCount);
+  const rows = Math.max(1, Math.ceil(playerCount / cols));
 
   monitorBoard.classList.toggle('is-single-layout', isSingleLayout);
   monitorBoard.style.gridTemplateColumns = isSingleLayout ? 'minmax(0, 1fr)' : `repeat(${cols}, minmax(0, 1fr))`;
@@ -216,5 +240,10 @@ socket.on('room:closed', () => {
 });
 
 window.addEventListener('resize', () => {
+  if (currentRoom) {
+    applyRoom(currentRoom);
+    return;
+  }
+
   scheduleRefit();
 });
